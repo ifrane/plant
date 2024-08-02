@@ -10,6 +10,7 @@ WiFiMulti WiFiMulti;
 Adafruit_SHT31 sht31(&Wire1);
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+#include <WiFiClientSecure.h>
 
 const char* ssid = "redacted"; //Your wifi network's SSID
 const char* password = "redacted"; //Your wifi network's password
@@ -26,7 +27,7 @@ const int pump39 = 25;
 const int pump36_2 = 26;
 const int pump37_2 = 27;
 
-int sensor36_thres = 530;
+int sensor36_thres = 610;
 int sensor37_thres = 530;
 int sensor38_thres = 530;
 int sensor39_thres = 530;
@@ -85,6 +86,13 @@ const char *ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 0; // Your time zone's offset in seconds
 const int daylightOffset_sec = 0; // Daylight offset in seconds
 
+// Static IP configuration
+IPAddress staticIP(192, 168, 0, 30); // ESP32 static IP
+IPAddress gateway(192, 168, 0, 1);    // IP Address of your network gateway (router)
+IPAddress subnet(255, 255, 255, 0);   // Subnet mask
+IPAddress primaryDNS(8, 8, 8, 8); // Primary DNS (optional)
+IPAddress secondaryDNS(8, 8, 4, 4);   // Secondary DNS (optional)
+
 WiFiClient espClient;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, ntpServer, gmtOffset_sec, daylightOffset_sec);
@@ -133,6 +141,14 @@ void setup_wifi() {
 
   Serial.println("");
   Serial.println("WiFi connected");
+
+    // Configuring static IP
+  if(!WiFi.config(staticIP, gateway, subnet, primaryDNS, secondaryDNS)) {
+    Serial.println("Failed to configure Static IP");
+  } else {
+    Serial.println("Static IP configured!");
+  }
+  
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 }
@@ -241,16 +257,7 @@ void setup() {
   pump36_2_previousMils = millis();
   pump37_2_previousMils = millis();
 
-  // Fetch and parse JSON
-  if (fetchAndParseJSON()) {
-    Serial.println("JSON parsed successfully");
-    // Print the variables to verify
-    Serial.println(sensor36_thres);
-    Serial.println(sensor37_thres);
-    // ... print other variables similarly
-  } else {
-    Serial.println("Failed to parse JSON");
-  }
+
 
 }
 
@@ -273,11 +280,11 @@ void printTimeDiff(unsigned long milliseconds, const char* pumpname) {
   char time_elapsed[10]; // Buffer to store the formatted string
 
   if (hours > 0) {
-    Serial.print(hours);
-    Serial.print(" hours and ");
+    //Serial.print(hours);
+    //Serial.print(" hours and ");
   }
-  Serial.print(minutes);
-  Serial.println(" minutes");
+  //Serial.print(minutes);
+  //Serial.println(" minutes");
   sprintf(time_elapsed, "%d:%02d", hours, minutes); // Format with hours and minutes
   //sprintf(time_elapsed, "0:%02d", minutes); // Format with minutes only
 
@@ -289,8 +296,11 @@ void printTimeDiff(unsigned long milliseconds, const char* pumpname) {
 }
 
 void reconnect() {
-  // Loop until we're reconnected
-  while (!client.connected()) {
+  int maxRetries = 5;
+  int retryCount = 0;
+
+  // Loop until we're reconnected or maximum retries reached
+  while (!client.connected() && retryCount < maxRetries) {
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
     String clientId = "ESP32Client-";
@@ -304,9 +314,9 @@ void reconnect() {
       Serial.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
       delay(5000);
+      retryCount++;
     }
   }
-}
 
 void loop() {
   // Read from each Seesaw device
@@ -317,13 +327,24 @@ void loop() {
   uint16_t capread36_2 = ss21.touchRead(0);
   uint16_t capread37_2 = ss22.touchRead(0);
 
+  // Fetch and parse JSON
+  if (fetchAndParseJSON()) {
+    Serial.println("JSON parsed successfully");
+    // Print the variables to verify
+    Serial.println(sensor36_thres);
+    Serial.println(sensor37_thres);
+    // ... print other variables similarly
+  } else {
+    Serial.println("Failed to parse JSON");
+  }
 
-
+  Serial.println(pump36_enable);
 
   // Update NTP time
   timeClient.update();
 
   String currentTime = timeClient.getFormattedTime();
+  Serial.println(currentTime);
 
   //Serial.println(currentTime);
   // Extract hour, minute, and second components
@@ -505,7 +526,7 @@ void loop() {
 
   timeDiff = mils - pump36_previousMils;
   // Call the function to print the time difference
-  Serial.println("pump36 time since last watering");
+  //Serial.println("pump36 time since last watering");
   printTimeDiff(timeDiff, "Pump36LastActive");
 
   if ((average_capread36 < sensor36_thres) && (overflow == 0) && (pump36_enable == 1) && (daytime == 1) && (timeDiff > (pump36_waittime*3600000))) {
@@ -522,7 +543,7 @@ void loop() {
 
   timeDiff = mils - pump37_previousMils;
   // Call the function to print the time difference
-  Serial.println("pump37 time since last watering");
+  //Serial.println("pump37 time since last watering");
   printTimeDiff(timeDiff, "Pump37LastActive");
 
   if ((average_capread37 < sensor37_thres) && (overflow == 0) && (pump37_enable == 1) && (daytime == 1) && (timeDiff > (pump37_waittime*3600000))) {
@@ -539,7 +560,7 @@ void loop() {
 
   timeDiff = mils - pump38_previousMils;
   // Call the function to print the time difference
-  Serial.println("pump38 time since last watering");
+  //Serial.println("pump38 time since last watering");
   printTimeDiff(timeDiff, "Pump38LastActive");
 
   if ((average_capread38 < sensor38_thres) && (overflow == 0) && (pump38_enable == 1) && (daytime == 1) && (timeDiff > (pump38_waittime*3600000))) {
@@ -556,7 +577,7 @@ void loop() {
 
   timeDiff = mils - pump39_previousMils;
   // Call the function to print the time difference
-  Serial.println("pump39 time since last watering");
+  //Serial.println("pump39 time since last watering");
   printTimeDiff(timeDiff, "Pump39LastActive");
 
   if ((average_capread39 < sensor39_thres) && (overflow == 0) && (pump39_enable == 1) && (daytime == 1) && (timeDiff > (pump39_waittime*3600000))) {
@@ -573,7 +594,7 @@ void loop() {
 
   timeDiff = mils - pump36_2_previousMils;
   // Call the function to print the time difference
-  Serial.println("pump36_2 time since last watering");
+  //Serial.println("pump36_2 time since last watering");
   printTimeDiff(timeDiff, "Pump36_2LastActive");
 
   if ((average_capread36_2 < sensor36_2_thres) && (overflow == 0) && (pump36_2_enable == 1) && (daytime == 1) && (timeDiff > (pump36_2_waittime*3600000))) {
@@ -590,10 +611,10 @@ void loop() {
 
   timeDiff = mils - pump37_2_previousMils;
   // Call the function to print the time difference
-  Serial.println("pump37_2 time since last watering");
+ // Serial.println("pump37_2 time since last watering");
   printTimeDiff(timeDiff, "Pump37_2LastActive");
 
-  if ((average_capread37_2 < sensor37_2_thres) && (overflow == 0) && (pump36_enable == 1) && (daytime == 1) && (timeDiff > (pump37_2_waittime*3600000))) {
+  if ((average_capread37_2 < sensor37_2_thres) && (overflow == 0) && (pump37_2_enable == 1) && (daytime == 1) && (timeDiff > (pump37_2_waittime*3600000))) {
     Serial.println("Threshold exceeded for Sensor 0x37 bus 2");
 
     Serial.print("pump37 bus 2 triggered");
@@ -604,13 +625,19 @@ void loop() {
     pump37_2_previousMils = millis();      
   }
 
-  delay(10000);
+  delay(600000);
 }
 
 
 bool fetchAndParseJSON() {
+  // Use WiFiClientSecure for HTTPS
+  WiFiClientSecure client;
+  client.setInsecure(); // This is not recommended for production use
+
   HTTPClient http;
-  http.begin(json_url);
+  http.begin(client, json_url);
+  http.setTimeout(5000); // Increase timeout to 5000ms
+
   int httpCode = http.GET();
 
   if (httpCode == HTTP_CODE_OK) {
@@ -624,6 +651,7 @@ bool fetchAndParseJSON() {
     if (error) {
       Serial.print("deserializeJson() failed: ");
       Serial.println(error.c_str());
+      http.end();
       return false;
     }
 
@@ -656,11 +684,14 @@ bool fetchAndParseJSON() {
     pump36_2_waittime = doc["waittime"]["pump36_2_waittime"];
     pump37_2_waittime = doc["waittime"]["pump37_2_waittime"];
 
+    http.end();
     return true;
   } else {
     Serial.printf("HTTP GET failed with code %d\n", httpCode);
+    if (httpCode == -1) {
+      Serial.printf("Error: %s\n", http.errorToString(httpCode).c_str());
+    }
+    http.end();
     return false;
   }
-
-  http.end();
 }
