@@ -1,6 +1,6 @@
 {
   "thresholds": {
-    "sensor36_thres": 610, 
+    "sensor36_thres": 630, 
     "sensor37_thres": 530, 
     "sensor38_thres": 530, 
     "sensor39_thres": 530, 
@@ -8,7 +8,7 @@
     "sensor37_2_thres": 530
   }, 
   "ontime": {
-    "pump36_ontime": 5000, 
+    "pump36_ontime": 8000, 
     "pump37_ontime": 5000, 
     "pump38_ontime": 5000, 
     "pump39_ontime": 5000, 
