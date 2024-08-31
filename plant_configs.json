@@ -1,26 +1,26 @@
 {
   "thresholds": {
-    "sensor36_thres": 630, 
-    "sensor37_thres": 530, 
+    "sensor36_thres": 710, 
+    "sensor37_thres": 710, 
     "sensor38_thres": 530, 
     "sensor39_thres": 530, 
-    "sensor36_2_thres": 530, 
+    "sensor36_2_thres": 700, 
     "sensor37_2_thres": 530
   }, 
   "ontime": {
-    "pump36_ontime": 8000, 
-    "pump37_ontime": 5000, 
+    "pump36_ontime": 4000, 
+    "pump37_ontime": 4000, 
     "pump38_ontime": 5000, 
     "pump39_ontime": 5000, 
-    "pump36_2_ontime": 5000, 
+    "pump36_2_ontime": 8000, 
     "pump37_2_ontime": 5000
   }, 
   "enabled": {
     "pump36_enable": 1, 
-    "pump37_enable": 0, 
+    "pump37_enable": 1, 
     "pump38_enable": 0, 
     "pump39_enable": 0, 
-    "pump36_2_enable": 0, 
+    "pump36_2_enable": 1, 
     "pump37_2_enable": 0
   }, 
   "waittime": {
