@@ -27,25 +27,25 @@ const int pump39 = 25;
 const int pump36_2 = 26;
 const int pump37_2 = 27;
 
-int sensor36_thres = 610;
-int sensor37_thres = 530;
+int sensor36_thres = 700;
+int sensor37_thres = 700;
 int sensor38_thres = 530;
 int sensor39_thres = 530;
-int sensor36_2_thres = 530;
+int sensor36_2_thres = 700;
 int sensor37_2_thres = 530;
 
-int pump36_ontime = 5000;
-int pump37_ontime = 5000;
+int pump36_ontime = 4000;
+int pump37_ontime = 4000;
 int pump38_ontime = 5000;
 int pump39_ontime = 5000;
-int pump36_2_ontime = 5000;
+int pump36_2_ontime = 8000;
 int pump37_2_ontime = 5000;
 
-int pump36_enable = 0;
-int pump37_enable = 0;
+int pump36_enable = 1;
+int pump37_enable = 1;
 int pump38_enable = 0;
 int pump39_enable = 0;
-int pump36_2_enable = 0;
+int pump36_2_enable = 1;
 int pump37_2_enable = 0;
 
 int pump36_waittime = 2;
@@ -317,6 +317,7 @@ void reconnect() {
       retryCount++;
     }
   }
+}
 
 void loop() {
   // Read from each Seesaw device
@@ -529,15 +530,22 @@ void loop() {
   //Serial.println("pump36 time since last watering");
   printTimeDiff(timeDiff, "Pump36LastActive");
 
-  if ((average_capread36 < sensor36_thres) && (overflow == 0) && (pump36_enable == 1) && (daytime == 1) && (timeDiff > (pump36_waittime*3600000))) {
+  if (average_capread36 < sensor36_thres) {
     Serial.println("Threshold exceeded for Sensor 0x36");
-      
-    Serial.print("pump36 triggered");
-    digitalWrite(pump36, LOW);
-    delay(pump36_ontime);
-    digitalWrite(pump36, HIGH);
+  
+    if ((overflow == 0) && (pump36_enable == 1) && (daytime == 1) && (timeDiff > (pump36_waittime*3600000))) {
+        
+      Serial.print("pump36 triggered");
+      digitalWrite(pump36, LOW); //turn on relay
+      delay((pump36_ontime/2));
+      digitalWrite(pump36, HIGH);
+      delay(10000);
+      digitalWrite(pump36, LOW); //turn on relay
+      delay((pump36_ontime/2));
+      digitalWrite(pump36, HIGH);
 
-    pump36_previousMils = millis();
+      pump36_previousMils = millis();
+    }
   }
 
 
@@ -546,15 +554,22 @@ void loop() {
   //Serial.println("pump37 time since last watering");
   printTimeDiff(timeDiff, "Pump37LastActive");
 
-  if ((average_capread37 < sensor37_thres) && (overflow == 0) && (pump37_enable == 1) && (daytime == 1) && (timeDiff > (pump37_waittime*3600000))) {
+  if (average_capread37 < sensor37_thres) {
     Serial.println("Threshold exceeded for Sensor 0x37");
+  
+    if ((overflow == 0) && (pump37_enable == 1) && (daytime == 1) && (timeDiff > (pump37_waittime*3600000))) {
+        
+      Serial.print("pump37 triggered");
+      digitalWrite(pump37, LOW); //turn on relay
+      delay((pump37_ontime/2));
+      digitalWrite(pump37, HIGH);
+      delay(10000);
+      digitalWrite(pump37, LOW); //turn on relay
+      delay((pump37_ontime/2));
+      digitalWrite(pump37, HIGH);
 
-    Serial.print("pump37 triggered");
-    digitalWrite(pump37, LOW);
-    delay(pump37_ontime);
-    digitalWrite(pump37, HIGH);
-
-    pump37_previousMils = millis();
+      pump37_previousMils = millis();
+    }
   }
 
 
@@ -563,15 +578,22 @@ void loop() {
   //Serial.println("pump38 time since last watering");
   printTimeDiff(timeDiff, "Pump38LastActive");
 
-  if ((average_capread38 < sensor38_thres) && (overflow == 0) && (pump38_enable == 1) && (daytime == 1) && (timeDiff > (pump38_waittime*3600000))) {
+  if (average_capread38 < sensor38_thres) {
     Serial.println("Threshold exceeded for Sensor 0x38");
-      
-    Serial.print("pump38 triggered");
-    digitalWrite(pump38, LOW);
-    delay(pump38_ontime);
-    digitalWrite(pump38, HIGH);
+  
+    if ((overflow == 0) && (pump38_enable == 1) && (daytime == 1) && (timeDiff > (pump38_waittime*3600000))) {
+        
+      Serial.print("pump38 triggered");
+      digitalWrite(pump38, LOW); //turn on relay
+      delay((pump38_ontime/2));
+      digitalWrite(pump38, HIGH);
+      delay(10000);
+      digitalWrite(pump38, LOW); //turn on relay
+      delay((pump38_ontime/2));
+      digitalWrite(pump38, HIGH);
 
-    pump38_previousMils = millis();
+      pump38_previousMils = millis();
+    }
   }
 
 
@@ -580,15 +602,22 @@ void loop() {
   //Serial.println("pump39 time since last watering");
   printTimeDiff(timeDiff, "Pump39LastActive");
 
-  if ((average_capread39 < sensor39_thres) && (overflow == 0) && (pump39_enable == 1) && (daytime == 1) && (timeDiff > (pump39_waittime*3600000))) {
+  if (average_capread39 < sensor39_thres) {
     Serial.println("Threshold exceeded for Sensor 0x39");
+  
+    if ((overflow == 0) && (pump39_enable == 1) && (daytime == 1) && (timeDiff > (pump39_waittime*3600000))) {
+        
+      Serial.print("pump39 triggered");
+      digitalWrite(pump39, LOW); //turn on relay
+      delay((pump39_ontime/2));
+      digitalWrite(pump39, HIGH);
+      delay(10000);
+      digitalWrite(pump39, LOW); //turn on relay
+      delay((pump39_ontime/2));
+      digitalWrite(pump39, HIGH);
 
-    Serial.print("pump39 triggered");
-    digitalWrite(pump39, LOW);
-    delay(pump39_ontime);
-    digitalWrite(pump39, HIGH);
-
-    pump39_previousMils = millis();     
+      pump39_previousMils = millis();
+    }
   }
 
 
@@ -597,15 +626,22 @@ void loop() {
   //Serial.println("pump36_2 time since last watering");
   printTimeDiff(timeDiff, "Pump36_2LastActive");
 
-  if ((average_capread36_2 < sensor36_2_thres) && (overflow == 0) && (pump36_2_enable == 1) && (daytime == 1) && (timeDiff > (pump36_2_waittime*3600000))) {
-    Serial.println("Threshold exceeded for Sensor 0x36 bus 2");
+  if (average_capread36_2 < sensor36_2_thres) {
+    Serial.println("Threshold exceeded for Sensor 0x36_2");
+  
+    if ((overflow == 0) && (pump36_2_enable == 1) && (daytime == 1) && (timeDiff > (pump36_2_waittime*3600000))) {
+        
+      Serial.print("pump36_2 triggered");
+      digitalWrite(pump36_2, LOW); //turn on relay
+      delay((pump36_2_ontime/2));
+      digitalWrite(pump36_2, HIGH);
+      delay(10000);
+      digitalWrite(pump36_2, LOW); //turn on relay
+      delay((pump36_2_ontime/2));
+      digitalWrite(pump36_2, HIGH);
 
-    Serial.print("pump36 bus 2 triggered");
-    digitalWrite(pump36_2, LOW);
-    delay(pump36_2_ontime);
-    digitalWrite(pump36_2, HIGH);
-
-    pump36_2_previousMils = millis();     
+      pump36_2_previousMils = millis();
+    }
   }
 
 
@@ -614,15 +650,22 @@ void loop() {
  // Serial.println("pump37_2 time since last watering");
   printTimeDiff(timeDiff, "Pump37_2LastActive");
 
-  if ((average_capread37_2 < sensor37_2_thres) && (overflow == 0) && (pump37_2_enable == 1) && (daytime == 1) && (timeDiff > (pump37_2_waittime*3600000))) {
-    Serial.println("Threshold exceeded for Sensor 0x37 bus 2");
+  if (average_capread37_2 < sensor37_2_thres) {
+    Serial.println("Threshold exceeded for Sensor 0x37_2");
+  
+    if ((overflow == 0) && (pump37_2_enable == 1) && (daytime == 1) && (timeDiff > (pump37_2_waittime*3600000))) {
+        
+      Serial.print("pump37_2 triggered");
+      digitalWrite(pump37_2, LOW); //turn on relay
+      delay((pump37_2_ontime/2));
+      digitalWrite(pump37_2, HIGH);
+      delay(10000);
+      digitalWrite(pump37_2, LOW); //turn on relay
+      delay((pump37_2_ontime/2));
+      digitalWrite(pump37_2, HIGH);
 
-    Serial.print("pump37 bus 2 triggered");
-    digitalWrite(pump37_2, LOW);
-    delay(pump37_2_ontime);
-    digitalWrite(pump37_2, HIGH);
-
-    pump37_2_previousMils = millis();      
+      pump37_2_previousMils = millis();
+    }
   }
 
   delay(600000);
@@ -639,7 +682,7 @@ bool fetchAndParseJSON() {
   http.setTimeout(5000); // Increase timeout to 5000ms
 
   int httpCode = http.GET();
-
+ 
   if (httpCode == HTTP_CODE_OK) {
     String payload = http.getString();
     Serial.println(payload);
