@@ -25,7 +25,7 @@
   }, 
   "waittime": {
     "pump36_waittime": 72, 
-    "pump37_waittime": 24, 
+    "pump37_waittime": 48, 
     "pump38_waittime": 72, 
     "pump39_waittime": 72, 
     "pump36_2_waittime": 72, 
