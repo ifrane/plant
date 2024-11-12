@@ -12,7 +12,7 @@
     "pump37_ontime": 60000, 
     "pump38_ontime": 5000, 
     "pump39_ontime": 5000, 
-    "pump36_2_ontime": 18000, 
+    "pump36_2_ontime": 24000, 
     "pump37_2_ontime": 5000
   }, 
   "enabled": {
