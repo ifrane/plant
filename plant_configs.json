@@ -16,12 +16,12 @@
     "pump37_2_ontime": 70000
   }, 
   "enabled": {
-    "pump36_enable": 1, 
+    "pump36_enable": 0, 
     "pump37_enable": 0, 
     "pump38_enable": 0, 
     "pump39_enable": 0, 
     "pump36_2_enable": 1, 
-    "pump37_2_enable": 1
+    "pump37_2_enable": 0
   }, 
   "waittime": {
     "pump36_waittime": 36, 
