@@ -24,11 +24,11 @@
     "pump37_2_enable": 0
   }, 
   "waittime": {
-    "pump36_waittime": 72, 
+    "pump36_waittime": 120, 
     "pump37_waittime": 48, 
-    "pump38_waittime": 72, 
+    "pump38_waittime": 120, 
     "pump39_waittime": 48, 
-    "pump36_2_waittime": 72, 
+    "pump36_2_waittime": 24, 
     "pump37_2_waittime": 48
   }
 }
