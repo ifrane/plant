@@ -2,7 +2,7 @@
   "thresholds": {
     "sensor36_thres": 580, 
     "sensor37_thres": 600, 
-    "sensor38_thres": 580, 
+    "sensor38_thres": 540, 
     "sensor39_thres": 530, 
     "sensor36_2_thres": 600, 
     "sensor37_2_thres": 580
@@ -24,9 +24,9 @@
     "pump37_2_enable": 0
   }, 
   "waittime": {
-    "pump36_waittime": 120, 
+    "pump36_waittime": 144, 
     "pump37_waittime": 48, 
-    "pump38_waittime": 120, 
+    "pump38_waittime": 168, 
     "pump39_waittime": 48, 
     "pump36_2_waittime": 96, 
     "pump37_2_waittime": 48
