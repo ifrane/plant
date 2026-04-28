@@ -1,6 +1,6 @@
 {
   "thresholds": {
-    "sensor36_thres": 580, 
+    "sensor36_thres": 540, 
     "sensor37_thres": 600, 
     "sensor38_thres": 540, 
     "sensor39_thres": 530, 
